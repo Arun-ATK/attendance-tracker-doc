@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <table class="student-history">
+            <thead>
+                <tr>
+                    <th>ROLL NO</th>
+                    <th>STUDENT NAME</th>
+                    <th>LECTURE TIMESTAMP</th>
+                    <th>ATTENDANCE</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <% for(var i = 0; i < history.length; ++i) {%>
+                    <tr>
+                        <td><%= history[i].rollno %></td>
+                        <td><%= history[i].name %></td>
+                        <td><%= history[i].start_time.toDateString() %></td>
+                        <td><%= history[i].ispresent %></td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </body>
+</html>

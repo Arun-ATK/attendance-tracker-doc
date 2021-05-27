@@ -1,0 +1,25 @@
+<html>
+	<body>
+			Sucessfully registered, Welcome! <% for(var i=0; i < given.length; i++) { %>
+			<%= (given[0].name) ? given[0].name : '' %>
+			<% } %>
+			<br>
+			Your Faculty Id is <b>
+				<%= (given[0].faculty_id) ? given[0].faculty_id : '' %>
+			</b>
+	</body>
+	<style>
+		body{
+			font-size : 25px;
+			border:2px solid black;
+			background:linear-gradient(#07F5F5,white);
+			position:absolute;
+	          top:50%;
+	          left:50%;
+	          transform: translate(-50%,-50%);
+	          text-align:center;
+               padding : 25px 25px;
+		}
+
+	</style>
+</html>

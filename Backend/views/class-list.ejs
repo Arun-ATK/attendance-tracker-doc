@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <table class="class-list-table">
+        <thead>
+            <tr>
+                <th>Class_ID</th>
+                <th>Subject</th>
+                <th>Fac_ID</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <% for(var i=0; i < classes.length; ++i) {%>
+                <tr>
+                    <td>
+                        <%= classes[i].class_id %>
+                    </td>
+                    <td>
+                        <%= classes[i].subject %>
+                    </td>
+                    <td>
+                        <%= classes[i].faculty_id %>
+                    </td>
+                </tr>
+                <% } %>
+        </tbody>
+    </table>
+
+    <form method="post" action="/dashboard/classes/upload_csv">
+        <label for="ClassID">Enter Class ID</label>
+        <input type="number" name="ClassID" id="ClassID">
+        <input type="submit" value="Upload CSV" />
+    </form>
+
+    <form method="post" action="/dashboard/classes/get_summary">
+        <label for="ClassID">Enter Class ID</label>
+        <input type="number" name="ClassID" id="ClassID">
+        <input type="submit" value="Get summary" />
+    </form>
+</body>
+
+</html>

@@ -1,0 +1,39 @@
+<html>
+<body>
+<table class="faculty-table" border=1 cell-spacing=0>
+  <thead>
+    <tr>
+      <th>Faculty id</th>
+      <th>name</th>
+      <th>Password</th>
+      <th>Email</th>
+      <th>College</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% for(var i=0; i < faculty.length; i++) { %>
+    <tr>
+	<td><%= faculty[i].faculty_id %></td>
+      <td><%= faculty[i].name %></td>
+      <td><%= faculty[i].password %></td>
+      <td><%= faculty[i].email %></td>
+      <td><%= faculty[i].college %></td>
+    </tr>
+    <% } %>
+  </tbody>
+
+  <style>
+  body{
+       font-size : 25px;
+       background:linear-gradient(#07F5F5,white);
+       position:absolute;
+       top:50%;
+       left:50%;
+       transform: translate(-50%,-50%);
+       text-align:center;
+  }
+ </style>
+</body>
+</table>
+</html>
