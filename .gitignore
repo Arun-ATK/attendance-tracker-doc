@@ -1,0 +1,4 @@
+# Git Ignore file for the compilation repo.
+# Check each folder for its respective .gitignore files
+
+node_modules/
