@@ -1,0 +1,32 @@
+<html>
+<body>
+<table class="belongsto-table" border=1 cell-spacing=0>
+  <thead>
+    <tr>
+      <th>Student id</th>
+      <th>Class id</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% for(var i=0; i < faculty.length; i++) { %>
+    <tr>
+     <td><%= faculty[i].student_id %></td>
+     <td><%= faculty[i].class_id %></td>
+    </tr>
+    <% } %>
+  </tbody>
+  </table>
+  <style>
+  body{
+       font-size : 25px;
+       background:linear-gradient(#07F5F5,white);
+       position:absolute;
+       top:50%;
+       left:50%;
+       transform: translate(-50%,-50%);
+       text-align:center;
+  }
+ </style>
+</body>
+</html>

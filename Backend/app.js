@@ -1,6 +1,5 @@
 const express = require('express');
 const app = express();
-const session = require('express-session');
 const bodyParser = require('body-parser');
 const path = require('path');
 const port = process.env.PORT || 3000;
@@ -9,6 +8,8 @@ const bcrypt = require('bcryptjs');
 const saltrounds = 10;
 const fileUpload = require('express-fileupload');
 const csvtojson = require('csvtojson');
+const session = require('express-session');
+const { ESRCH } = require('constants');
 
 //const cors = require('cors');
 //const multer = require('multer');
@@ -21,9 +22,6 @@ const csvtojson = require('csvtojson');
 // for parsing application/xwww-
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-app.set('view engine', 'ejs');
 app.use(fileUpload());
 app.use(express.static('public/img'));
 app.use(session({
@@ -33,38 +31,113 @@ app.use(session({
     cookie: { secure: false }
 }));
 
-//app.use(express.static(__dirname + '/logged'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+//app.use(morgan('dev'));
+//app.use(cors());
+//app.use(express.static(__dirname + '/dashboard'));
 /*app.use(fileUpload({
     createParentPath: true
 }));
 */
-//app.use(morgan('dev'));
-//app.use(cors());
+
+app.set('view engine', 'ejs');
 
 app.listen(port, () => console.log(`listening on port ${port}!`));
 
-// const pool = new Pool({
-//   connectionString: process.env.DATABASE_URL,
-//   ssl: {
-//     rejectUnauthorized: false
-//   }
-// });
-
 const pool = new Pool({
-    user: 'postgres',
-    host: '127.0.0.1',
-    database: 'testattd',
-    password: 'atk@postgres8',
-    port: 5432
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false
+    }
 });
 
+
 //displaying the database
-app.get('/db', async (req, res) => {
+app.get('/FACULTY', async (req, res) => {
     try {
         const client = await pool.connect();
         const result = await client.query('SELECT * FROM faculty');
         const faculty = { 'faculty': (result) ? result.rows : null };
-        res.render('db', faculty);
+        res.render('faculty', faculty);
+        client.release();
+    } catch (err) {
+        console.error(err);
+        res.send("Error " + err);
+    }
+});
+
+app.get('/STUDENT', async (req, res) => {
+    try {
+        const client = await pool.connect();
+        const result = await client.query('SELECT * FROM student');
+        const faculty = { 'faculty': (result) ? result.rows : null };
+        res.render('student', faculty);
+        client.release();
+    } catch (err) {
+        console.error(err);
+        res.send("Error " + err);
+    }
+});
+
+app.get('/CLASS', async (req, res) => {
+    try {
+        const client = await pool.connect();
+        const result = await client.query('SELECT * FROM class');
+        const faculty = { 'faculty': (result) ? result.rows : null };
+        res.render('class', faculty);
+        client.release();
+    } catch (err) {
+        console.error(err);
+        res.send("Error " + err);
+    }
+});
+
+// app.get('/CLASS', async (req, res) => {
+//     try {
+//         const client = await pool.connect();
+//         const result = await client.query('SELECT * FROM class');
+//         const faculty = { 'faculty': (result) ? result.rows : null };
+//         res.render('class', faculty);
+//         client.release();
+//     } catch (err) {
+//         console.error(err);
+//         res.send("Error " + err);
+//     }
+// });
+
+app.get('/LECTURE', async (req, res) => {
+    try {
+        const client = await pool.connect();
+        const result = await client.query('SELECT * FROM lecture');
+        const faculty = { 'faculty': (result) ? result.rows : null };
+        res.render('lecture', faculty);
+        client.release();
+    } catch (err) {
+        console.error(err);
+        res.send("Error " + err);
+    }
+});
+
+app.get('/ATTENDS', async (req, res) => {
+    try {
+        const client = await pool.connect();
+        const result = await client.query('SELECT * FROM attends');
+        const faculty = { 'faculty': (result) ? result.rows : null };
+        res.render('attends', faculty);
+        client.release();
+    } catch (err) {
+        console.error(err);
+        res.send("Error " + err);
+    }
+});
+
+app.get('/BELONGSTO', async (req, res) => {
+    try {
+        const client = await pool.connect();
+        const result = await client.query('SELECT * FROM belongsto');
+        const faculty = { 'faculty': (result) ? result.rows : null };
+        res.render('belongsto', faculty);
         client.release();
     } catch (err) {
         console.error(err);
@@ -148,7 +221,7 @@ app.post('/dashboard', async (req, res) => {
         var password = req.body.password;
         var email = req.body.email;
 
-        console.log(`Email: ${email}, Password: ${password}`);
+        // console.log(`Email: ${email}, Password: ${password}`);
         //res.send('request received!');
 
         const given = {
@@ -171,10 +244,7 @@ app.post('/dashboard', async (req, res) => {
         const ok = bcrypt.compareSync(given.password, password);
 
         if (email == given.email && ok) {
-
-            // Save Faculty ID in a session variable
             req.session.faculty_id = faculty[0].faculty_id;
-            console.log(req.session.faculty_id);
 
             res.render('dashboard', { given: faculty });
         }
@@ -200,10 +270,10 @@ app.post('/dashboard/new_class_created', async (req, res) => {
     var faculty_id = req.session.faculty_id;
     var subject = req.body.subject;
 
-    const given = {
-        'faculty_id': faculty_id,
-        'subject': subject
-    };
+    // const given = {
+    //     'faculty_id': faculty_id,
+    //     'subject': subject
+    // };
 
     var text = 'INSERT INTO class (faculty_id,subject) VALUES ($1,$2) RETURNING *';
     var values = [faculty_id, subject];
@@ -213,8 +283,6 @@ app.post('/dashboard/new_class_created', async (req, res) => {
         const result = await client.query(text, values);
         const newClass = result.rows;
 
-        // Saving class_id in a session variable
-        // var class_id = req.body.class_id;
         req.session.class_id = newClass[0].class_id;
 
         res.render('new-class-created', { given: newClass });
@@ -234,7 +302,9 @@ app.get('/dashboard/new_class_created/new_student', function (req, res) {
 let studdata = "text";
 
 app.post('/dashboard/new_class_created/new_student/information', async (req, res) => {
+    // var class_id = req.body.class_id;
     var class_id = req.session.class_id;
+
     studdata = req.files.csv_file.data.toString('utf8');
     //studdata = csvdata.substring(csvdata.indexOf("\nFull Name") + 1);
 
@@ -252,6 +322,7 @@ app.post('/dashboard/new_class_created/new_student/information', async (req, res
         result.push(obj);
     }
 
+
     for (const obj of result) {
         var values = [];
         if (typeof obj["email"] != 'undefined') {
@@ -264,24 +335,36 @@ app.post('/dashboard/new_class_created/new_student/information', async (req, res
             //populate the student table and belongsto table
             var text1 = 'INSERT INTO student (rollno,name,dob,major,year,college,email) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *';
             var text2 = 'INSERT INTO belongsto (student_id,class_id) VALUES ($2,$1) RETURNING *';
+            var text3 = 'SELECT * FROM student WHERE email=$1';
 
             try {
                 const client = await pool.connect();
-                //inserting into student table
-                const result1 = await client.query(text1, values);
                 var values2 = [class_id];
-                const faculty = result1.rows;
-                values2.push(faculty[0].student_id);
+                var values3 = [values[6]];
 
-                //inserting into belongsto table
-                const result2 = await client.query(text2, values2);
-                console.log("success!");
+                const result1 = await client.query(text3, values3);
+                const student_exists = result1.rows;
+
+                //check if student student exists
+                ///
+                if (typeof student_exists[0] == 'undefined') {
+                    const result2 = await client.query(text1, values);
+                    const faculty = result2.rows;
+                    values2.push(faculty[0].student_id);
+                }
+                //student doesn't exists
+                else {
+                    values2.push(student_exists[0].student_id);
+                }
+
+                //insert into belongsto table
+                const result3 = await client.query(text2, values2);
                 client.release();
-            } catch (err) {
+            }
+            catch (err) {
                 console.error(err);
                 res.send("Error " + err);
             }
-
         }
     }
     return res.render('student-detail-success');
@@ -291,12 +374,11 @@ app.post('/dashboard/new_class_created/new_student/information', async (req, res
 app.post('/dashboard/classes', async (req, res) => {
 
     // Save Faculty ID as a session variable
-    // NOTE: FAC_ID should be set when user logs in, not here
 
-    const query  = 'SELECT * FROM CLASS WHERE FACULTY_ID=$1;';
+    const query = 'SELECT * FROM CLASS WHERE FACULTY_ID=$1;';
     const values = [req.session.faculty_id];
 
-    try {    
+    try {
         const client = await pool.connect();
         const result = await client.query(query, values);
 
@@ -304,15 +386,17 @@ app.post('/dashboard/classes', async (req, res) => {
 
         client.release();
     }
-    catch(err) {
+    catch (err) {
         res.send('ERROR: ' + err);
         console.error(err);
     }
 });
 
-
 //uploading csv files
-app.post('/dashboard/classses/upload_csv', function (req, res) {
+app.post('/dashboard/classes/upload_csv', function (req, res) {
+    req.session.class_id = req.body.class_id;
+
+    console.log(req.session.class_id);
     res.render('upload-csv');
 });
 
@@ -361,7 +445,10 @@ app.post('/dashboard/classes/uploaded_csv', async (req, res) => {
     console.log(lecture_duration + " --- " + start_time);
 
     //insert into lecture table
-    var text = 'INSERT INTO lecture (class_id,duration,start_time,threshold_percent) VALUES ($1,$2,$3,$4) RETURNING *';
+    var text = "INSERT INTO lecture (class_id,duration,start_time,threshold_percent) \
+        VALUES ($1,$2,TO_TIMESTAMP($3, 'MM/DD/YYYY, HH:MI:SS AM') ,$4) \
+        RETURNING *";
+
     var values = [class_id, lecture_duration, start_time, threshold_percent];
     var lecture_id = "";
 
@@ -374,8 +461,8 @@ app.post('/dashboard/classes/uploaded_csv', async (req, res) => {
     } catch (err) {
         console.error(err);
         res.send("Error " + err);
+        // res.send("Student already exists");
     }
-
 
     //insert into attends table
     for (const obj of result) {
@@ -397,27 +484,82 @@ app.post('/dashboard/classes/uploaded_csv', async (req, res) => {
                 res.send("Error " + err);
             }
 
-            //calculate ispresent
+            //calculate student duration
             var student_duration = obj["Duration"];
-            student_duration = student_duration.substring(0, student_duration.indexOf("m"));
-            var ispresent = 0;
+            var s = student_duration;
+            var ok = 1;
 
-            if (student_duration >= (lecture_duration * threshold_percent / 100)) {
-                ispresent = 1;
+            if (s.length <= 3 && s.slice(-1) == "s") {
+                student_duration = "0";
+                ok = 0;
+            }
+            if (ok) {
+                student_duration = student_duration.substring(0, student_duration.indexOf("m"));
             }
 
-            //inserting into attends
-            text = 'INSERT INTO attends (student_id,lecture_id,ispresent) VALUES ($1,$2,$3)';
-            values = [student_id, lecture_id, ispresent];
+            //check if student already exists in attends
+            text = 'SELECT * FROM attends WHERE student_id=$1 AND lecture_id=$2';
+            values = [student_id, lecture_id];
 
+            var already_exists;
             try {
                 const client = await pool.connect();
                 const ans = await client.query(text, values);
-                console.log(student_id + ' : success!')
+                already_exists = ans.rows;
                 client.release();
             } catch (err) {
                 console.error(err);
                 res.send("Error " + err);
+            }
+
+            ok = 0;
+            //student already exists
+            if (typeof already_exists[0] != 'undefined') {
+                student_duration = +student_duration + +already_exists[0].duration;
+                ok = 1;
+            }
+
+            var ispresent = 0;
+            if (student_duration >= (lecture_duration * threshold_percent / 100)) {
+                ispresent = 1;
+            }
+
+            if (!ok) {
+                //inserting into attends
+                text = 'INSERT INTO attends (student_id,lecture_id,ispresent,duration) VALUES ($1,$2,$3,$4)';
+                values = [student_id, lecture_id, ispresent, student_duration];
+
+                try {
+                    const client = await pool.connect();
+                    const ans = await client.query(text, values);
+                    console.log(student_id + ' : success!')
+                    client.release();
+                } catch (err) {
+                    var errObj = {
+                        student_id: student_id,
+                        lecture_id: lecture_id,
+                        ispresent: ispresent,
+                        student_duration: student_duration
+                    };
+
+                    console.error(errObj);
+                    console.error(err);
+                    // res.send("Error " + err);
+                }
+            }
+            else {
+                //update the record in ATTENDS
+                text = 'UPDATE attends SET duration=$1, ispresent=$2 WHERE student_id=$3';
+                values = [student_duration, ispresent, student_id];
+                try {
+                    const client = await pool.connect();
+                    const ans = await client.query(text, values);
+                    console.log(student_id + ' : success!')
+                    client.release();
+                } catch (err) {
+                    console.error(err);
+                    res.send("Error " + err);
+                }
             }
 
         }
@@ -426,38 +568,36 @@ app.post('/dashboard/classes/uploaded_csv', async (req, res) => {
 });
 
 // Get names of all students in a class and number of lectures attended
-app.post('/dashboard/classes/get_summary', async (req, res) => {
+app.post('/dashboard/classes/class-details', async (req, res) => {
 
     // Save Class ID as a session variable when user views details of a class
-    req.session.class_id = req.body.ClassID;
-    // console.log('getSum ' + req.session.class_id);
-    // console.log('getSum' + req.session.faculty_id)
+    req.session.class_id = req.body.class_id;
 
     // Total number of lectures for the chosen class
     const totLecCountQuery = 'SELECT COUNT(*) AS VALUE \
-                            FROM CLASS_LECTURES \
-                            WHERE CLASS_ID=$1 AND FACULTY_ID=$2';
+        FROM CLASS_LECTURES \
+        WHERE CLASS_ID=$1 AND FACULTY_ID=$2';
 
     // Get student details and number of lectures attended
     const AttendanceQuery = 'SELECT STUDENT_ID, ROLLNO, NAME, COUNT(ISPRESENT) FILTER(WHERE ISPRESENT=TRUE) AS ATTENDANCE \
-                    FROM STUDENT_ATTENDANCE \
-                    WHERE CLASS_ID=$1 AND FACULTY_ID=$2 \
-                    GROUP BY STUDENT_ID, ROLLNO, NAME';
+        FROM STUDENT_ATTENDANCE \
+        WHERE CLASS_ID=$1 AND FACULTY_ID=$2 \
+        GROUP BY STUDENT_ID, ROLLNO, NAME';
 
     const values = [req.session.class_id, req.session.faculty_id];
 
     try {
-        const client        = await pool.connect();
+        const client = await pool.connect();
         const totalLectures = await client.query(totLecCountQuery, values);
-        const result        = await client.query(AttendanceQuery, values);
+        const result = await client.query(AttendanceQuery, values);
 
         // Error checking
-        if(result.rows.length == 0) {
-            res.send('Class does not exist!');
+        if (totalLectures.rows.length == 0) {
+            res.send('No lecture files uploaded for class');
             return;
         }
-        if(totalLectures.rows.length == 0) {
-            res.send('No lecture files uploaded for class');
+        if (result.rows.length == 0) {
+            res.send('Class does not exist!');
             return;
         }
 
@@ -478,15 +618,15 @@ app.post('/dashboard/classes/get_summary', async (req, res) => {
 });
 
 // Display the attendance history for a particular student
-app.post('dashboard/classes/get_summary/student', async (req, res) => {
-    const student_id = req.body.StudentID;
+app.post('/dashboard/classes/class-details/student', async (req, res) => {
+    const student_id = req.body.student_id;
 
-    // FAC_ID used to ensure users cannot view other users' class records
+    // faculty_ID used to ensure users cannot view other users' class records
     const studentHistoryQuery = 'SELECT ROLLNO, NAME, ISPRESENT, START_TIME \
-                                    FROM STUDENT_ATTENDANCE \
-                                    WHERE STUDENT_ID=$1 \
-                                    AND CLASS_ID=$2 \
-                                    AND FACULTY_ID=$3';
+        FROM STUDENT_ATTENDANCE \
+        WHERE STUDENT_ID=$1 \
+        AND CLASS_ID=$2 \
+        AND FACULTY_ID=$3';
 
     const values = [student_id, req.session.class_id, req.session.faculty_id];
 
@@ -494,7 +634,7 @@ app.post('dashboard/classes/get_summary/student', async (req, res) => {
         const client = await pool.connect();
         const result = await client.query(studentHistoryQuery, values);
 
-        if(result.rows.length == 0) {
+        if (result.rows.length == 0) {
             res.send('Student has no attendace records!');
             return;
         }

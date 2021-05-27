@@ -4,11 +4,11 @@
           <div class="frame">
           <form method="post" action="/dashboard/new_class_created/new_student/information" enctype="multipart/form-data">
                     <b>STUDENT INFO</b><br><br>
-                    <!-- Class id :
+                    Class id :
                     <input type="text" name="class_id" placeholder="Enter class id" />
-                    <br><br> -->
-                    (rollno,name,dob(yyyy-mm-dd),year,college,email)
                     <br><br>
+                    <p>(rollno,name,dob(yyyy-mm-dd),year,college,email)</p>
+                    <br>
                     Upload CSV :
                     <input type="file" name="csv_file" required>
                     <br><br>
@@ -38,6 +38,9 @@
           }
           b{
                font-size:30px;
+          }
+          p{
+               font-size : 17px;
           }
 
      </style>

@@ -4,9 +4,9 @@
         <h4>Total lectures taken: <%= totalLectures[0].value %></h4>
 
         <!-- Temp QDS. Fix this in front end so that user just has to click a student's name -->
-        <form action="/classes/class-details/student" method="post">
-            <label for="StudentID">Enter Student_ID: </label>
-            <input type="number" name="StudentID" id="StudentID" />
+        <form action="/dashboard/classes/class-details/student" method="post">
+            <label for="student_id">Enter Student_ID: </label>
+            <input type="number" name="student_id" id="student_id" />
             <br>
             <input type="submit" value="Submit">
         </form>
@@ -17,7 +17,7 @@
                     <th>STUDENT ID</th>
                     <th>ROLL NO</th>
                     <th>STUDENT NAME</th>
-                    <th>ATTENDANCE PERCENTAGE</th>
+                    <th>ATTENDANCE</th>
                 </tr>
             </thead>
 
