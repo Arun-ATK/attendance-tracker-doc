@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <h2>Lecture date: <%= date[0].start_time %></h2>
+        <table class="lecture-details">
+            <thead>
+                <tr>
+                    <th>ROLL NO</th>
+                    <th>STUDENT NAME</th>
+                    <th>ATTENDANCE</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <% for(var i = 0; i < lecture_details.length; ++i) {%>
+                    <tr>
+                        <td><%= lecture_details[i].rollno %></td>
+                        <td><%= lecture_details[i].name %></td>
+                        <td><%= lecture_details[i].ispresent %></td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </body>
+</html>

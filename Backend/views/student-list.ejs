@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <h4>Total lectures taken: <%= totalLectures[0].value %></h4>
+
+        <!-- Temp QDS. Fix this in front end so that user just has to click a student's name -->
+        <form action="/dashboard/classes/class-details/student-details" method="post">
+            <label for="student_id">Enter Student_ID: </label>
+            <input type="number" name="student_id" id="student_id" />
+            <br><br>
+            <input type="submit" value="Submit">
+        </form>
+        <br><br>
+
+        <form action="/dashboard/classes/class-details/lectures" method="post">
+            <input type="submit" value="View Lectures">
+        </form>
+
+        <table class="student-list">
+            <thead>
+                <tr>
+                    <th>STUDENT ID</th>
+                    <th>ROLL NO</th>
+                    <th>STUDENT NAME</th>
+                    <th>ATTENDANCE</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <% for(var i = 0; i < students.length; ++i) {%>
+                    <tr>
+                        <td><%= students[i].student_id %></td>
+                        <td><%= students[i].rollno %></td>
+                        <td><%= students[i].name %></td>
+                        <td><%= students[i].attendance %></td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </body>
+</html>
