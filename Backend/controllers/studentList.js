@@ -13,7 +13,7 @@ const getList = (db) => async (req, res) => {
             class_id: 1
         });
 
-        const result = await db
+        const studentList = await db
             .select('student_id', 'rollno', 'name', db.raw('COUNT(CASE WHEN ispresent=true THEN 1 END) AS attendance'))
             .from('student_attendance')
             .where({
@@ -23,18 +23,20 @@ const getList = (db) => async (req, res) => {
             .groupBy('student_id', 'rollno', 'name');
 
         console.table(totalLectures);
-        console.table(result);
+        console.table(studentList);
 
         var output = {
-            lecNum: totalLectures,
-            studentList: result
+            lecNum: { title: `Lecture Count for ${className}`, table: totalLectures },
+            studentList: { title: `Student Attendance for ${className}`, table: studentList}
         };
 
-        res.status(201).json(output);
+        return res.status(200).json(output);
     }
 
     catch (err) {
         console.log(err);
-        res.status(500).json({ message: "Error while retrieving student list!" });
+        return res
+            .status(400)
+            .json({ message: `${err.detail || err.message || err}` });
       }
 }
