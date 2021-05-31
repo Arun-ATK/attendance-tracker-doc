@@ -1,29 +1,40 @@
 {
-  "name": "app",
+  "name": "attendancetracker",
   "version": "1.0.0",
-  "description": "",
+  "description": "This project automates the process of marking the attendance of students using the csv file downloaded from Microsoft Teams, stores it in the database and provides an interface to retrieve the data.",
   "main": "index.js",
   "scripts": {
-    "start": "node app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "devStart": "nodemon index.js"
   },
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SRI-PRIYAN/AttendanceTrackerBackEnd.git"
+  },
+  "author": "SRI PRIYAN",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SRI-PRIYAN/AttendanceTrackerBackEnd/issues"
+  },
+  "homepage": "https://github.com/SRI-PRIYAN/AttendanceTrackerBackEnd#readme",
   "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "body-parser": "^1.19.0",
+    "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
-    "csvtojson": "^2.0.10",
-    "ejs": "^3.1.6",
+    "csv-parser": "^3.0.0",
+    "dotenv": "^10.0.0",
+    "email-validator": "^2.0.4",
     "express": "^4.17.1",
     "express-fileupload": "^1.2.1",
-    "express-session": "^1.17.2",
-    "formidable": "^1.2.2",
-    "loadash": "^1.0.0",
-    "lodash": "^4.17.21",
-    "morgan": "^1.10.0",
-    "multer": "^1.4.2",
-    "pg": "^8.6.0",
-    "pug": "^3.0.2"
+    "iconv-lite": "^0.4.24",
+    "jsonwebtoken": "^8.5.1",
+    "knex": "^0.95.5",
+    "pg": "^8.6.0"
+  },
+  "engines": {
+    "node": "14.x"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
   }
 }

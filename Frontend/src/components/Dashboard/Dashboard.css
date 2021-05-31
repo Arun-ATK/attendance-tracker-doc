@@ -1,0 +1,69 @@
+.user {
+  margin: 0;
+  padding: 1rem;
+  color: black;
+  background-color: #97fff6;
+  border: 1px solid black;
+}
+
+.user > i {
+  padding: 0.5rem;
+  border: 1px solid black;
+  border-radius: 2rem;
+}
+
+.btn {
+  margin: 1rem;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+}
+
+.class-bar {
+  border: 1px solid white;
+  text-align: center;
+  color: white;
+  background-color: #111;
+}
+
+.class-bar > h1 {
+  margin: 0;
+  padding: 1.5rem;
+  border-bottom: 1px solid white;
+}
+
+.class-elt > h3 {
+  margin: 0;
+  padding: 1rem;
+  border-bottom: 1px solid white;
+}
+
+.class-elt > h3:hover {
+  cursor: pointer;
+  background-color: #444;
+}
+
+.options {
+  display: flex;
+  justify-content: space-around;
+  border: 1px solid white;
+  height: fit-content;
+  background-color: #111;
+}
+
+select {
+  height: 3rem;
+  min-width: 75%;
+  font-size: 1.2rem;
+  padding: 0.5rem;
+  border: 2px solid aqua;
+  border-radius: 0.5rem;
+}
+
+select option {
+  height: 2rem;
+  border-radius: 0.5rem;
+  background-color: #aaa;
+}
